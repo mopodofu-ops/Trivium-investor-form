@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trivium Venture Network — Investor Interest Form</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --brown:       #433329;
+    --gold:        #EFAC4D;
+    --gold-light:  #F4D6A5;
+    --bg:          #FBF9F7;
+    --tan:         #A77F63;
+    --tan-light:   #D4B99A;
+    --white:       #FFFFFF;
+    --text:        #2A1F18;
+    --muted:       #8B6D5A;
+    --border:      #E8DDD4;
+    --error:       #C0392B;
+    --success:     #2E7D32;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* ── Background texture ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 10% 0%, rgba(239,172,77,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 80% at 90% 100%, rgba(67,51,41,0.06) 0%, transparent 55%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Layout ── */
+  .page-wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 60px 24px 100px;
+  }
+
+  /* ── Header ── */
+  .header {
+    text-align: center;
+    margin-bottom: 56px;
+    animation: fadeUp 0.7s ease both;
+  }
+
+  .logo-mark {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+
+  .logo-diamond {
+    width: 32px;
+    height: 32px;
+    background: var(--gold);
+    transform: rotate(45deg);
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  .logo-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--brown);
+    text-transform: uppercase;
+  }
+
+  .header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 6vw, 52px);
+    font-weight: 300;
+    color: var(--brown);
+    line-height: 1.15;
+    margin-bottom: 16px;
+    letter-spacing: -0.01em;
+  }
+
+  .header h1 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .header p {
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .divider {
+    width: 56px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    margin: 24px auto;
+    border-radius: 2px;
+  }
+
+  /* ── Progress bar ── */
+  .progress-container {
+    margin-bottom: 40px;
+    animation: fadeUp 0.7s 0.1s ease both;
+  }
+
+  .progress-steps {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    position: relative;
+  }
+
+  .progress-steps::before {
+    content: '';
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 80px);
+    max-width: 400px;
+    height: 1px;
+    background: var(--border);
+    z-index: 0;
+  }
+
+  .step-dot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    max-width: 140px;
+  }
+
+  .dot {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--tan);
+    transition: all 0.3s ease;
+  }
+
+  .step-dot.active .dot {
+    border-color: var(--gold);
+    background: var(--gold);
+    color: var(--white);
+    box-shadow: 0 0 0 4px rgba(239,172,77,0.15);
+  }
+
+  .step-dot.completed .dot {
+    border-color: var(--brown);
+    background: var(--brown);
+    color: var(--white);
+  }
+
+  .step-label {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--tan);
+    font-weight: 500;
+    text-align: center;
+  }
+
+  .step-dot.active .step-label { color: var(--brown); font-weight: 600; }
+
+  /* ── Card ── */
+  .form-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 48px 52px;
+    box-shadow: 0 4px 40px rgba(67,51,41,0.06), 0 1px 4px rgba(67,51,41,0.04);
+    animation: fadeUp 0.7s 0.2s ease both;
+  }
+
+  @media (max-width: 600px) {
+    .form-card { padding: 32px 24px; }
+  }
+
+  /* ── Step panels ── */
+  .step-panel { display: none; }
+  .step-panel.active { display: block; }
+
+  .step-heading {
+    margin-bottom: 32px;
+  }
+
+  .step-heading .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .step-heading h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--brown);
+    line-height: 1.2;
+  }
+
+  /* ── Form fields ── */
+  .field-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 24px;
+  }
+
+  .field-grid .full { grid-column: 1 / -1; }
+
+  @media (max-width: 580px) {
+    .field-grid { grid-template-columns: 1fr; }
+    .field-grid .full { grid-column: 1; }
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  label {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--brown);
+  }
+
+  label .req { color: var(--gold); margin-left: 2px; }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="url"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 11px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-size: 14.5px;
+    font-weight: 300;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--gold);
+    background: var(--white);
+    box-shadow: 0 0 0 3px rgba(239,172,77,0.12);
+  }
+
+  input.error, select.error, textarea.error {
+    border-color: var(--error);
+  }
+
+  .error-msg {
+    font-size: 11px;
+    color: var(--error);
+    display: none;
+  }
+
+  .error-msg.show { display: block; }
+
+  textarea {
+    resize: vertical;
+    min-height: 100px;
+    line-height: 1.6;
+  }
+
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23A77F63' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 40px;
+    cursor: pointer;
+  }
+
+  /* ── Checkbox group ── */
+  .checkbox-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  @media (max-width: 400px) { .checkbox-group { grid-template-columns: 1fr; } }
+
+  .checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--bg);
+  }
+
+  .checkbox-item:hover { border-color: var(--tan-light); background: var(--white); }
+
+  .checkbox-item input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--gold);
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+
+  .checkbox-item span {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  .checkbox-item:has(input:checked) {
+    border-color: var(--gold);
+    background: rgba(239,172,77,0.06);
+  }
+
+  /* ── Buttons ── */
+  .btn-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 36px;
+    gap: 12px;
+  }
+
+  .btn {
+    padding: 13px 32px;
+    border-radius: 8px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    outline: none;
+  }
+
+  .btn-primary {
+    background: var(--brown);
+    color: var(--white);
+    box-shadow: 0 2px 12px rgba(67,51,41,0.18);
+  }
+
+  .btn-primary:hover {
+    background: #2d221a;
+    box-shadow: 0 4px 20px rgba(67,51,41,0.28);
+    transform: translateY(-1px);
+  }
+
+  .btn-primary:active { transform: translateY(0); }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--muted);
+    border: 1.5px solid var(--border);
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--tan-light);
+    color: var(--brown);
+    background: rgba(167,127,99,0.05);
+  }
+
+  .btn-ghost {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 13px;
+    cursor: pointer;
+    padding: 4px 0;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* ── Submit button loading state ── */
+  .btn-primary.loading {
+    opacity: 0.8;
+    pointer-events: none;
+    position: relative;
+  }
+
+  .btn-primary.loading::after {
+    content: '';
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: white;
+    border-radius: 50%;
+    display: inline-block;
+    animation: spin 0.7s linear infinite;
+    margin-left: 10px;
+    vertical-align: middle;
+  }
+
+  /* ── Success screen ── */
+  .success-screen {
+    display: none;
+    text-align: center;
+    padding: 20px 0 8px;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .success-screen.show { display: block; }
+
+  .success-icon {
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, var(--brown), var(--tan));
+    border-radius: 50%;
+    margin: 0 auto 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .success-icon svg { width: 28px; height: 28px; color: white; }
+
+  .success-screen h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 400;
+    color: var(--brown);
+    margin-bottom: 12px;
+  }
+
+  .success-screen p {
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 380px;
+    margin: 0 auto;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .success-detail {
+    margin-top: 28px;
+    padding: 16px 20px;
+    background: rgba(239,172,77,0.08);
+    border: 1px solid rgba(239,172,77,0.25);
+    border-radius: 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--tan);
+    letter-spacing: 0.03em;
+  }
+
+  /* ── Footer ── */
+  .footer {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 12px;
+    color: var(--tan);
+    letter-spacing: 0.03em;
+    animation: fadeUp 0.7s 0.3s ease both;
+  }
+
+  .footer a { color: var(--gold); text-decoration: none; }
+
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* ── Hint text ── */
+  .hint { font-size: 11px; color: var(--muted); margin-top: 4px; font-weight: 300; }
+
+  /* ── Config banner ── */
+  .config-banner {
+    background: rgba(239,172,77,0.12);
+    border: 1px solid rgba(239,172,77,0.35);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 12px;
+    color: var(--tan);
+    margin-bottom: 28px;
+    font-family: 'DM Mono', monospace;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .config-banner.hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div class="page-wrapper">
+
+  <!-- Header -->
+  <header class="header">
+    <div class="logo-mark">
+      <div class="logo-diamond"></div>
+      <span class="logo-text">Trivium Venture Network</span>
+    </div>
+    <h1>Investor<br><em>Interest Form</em></h1>
+    <div class="divider"></div>
+    <p>Share your investment profile with our network. We review every submission and will be in touch with relevant opportunities.</p>
+  </header>
+
+  <!-- Config banner (shown until Apps Script URL is set) -->
+  <div class="config-banner" id="configBanner">
+    ⚙ Developer: Replace <code>APPS_SCRIPT_URL</code> in the script below with your deployed Google Apps Script endpoint.
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-container">
+    <div class="progress-steps">
+      <div class="step-dot active" id="dot-1">
+        <div class="dot">01</div>
+        <span class="step-label">Profile</span>
+      </div>
+      <div class="step-dot" id="dot-2">
+        <div class="dot">02</div>
+        <span class="step-label">Investment</span>
+      </div>
+      <div class="step-dot" id="dot-3">
+        <div class="dot">03</div>
+        <span class="step-label">Focus</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form card -->
+  <div class="form-card">
+
+    <!-- ── Step 1: Investor Profile ── -->
+    <div class="step-panel active" id="step-1">
+      <div class="step-heading">
+        <span class="eyebrow">Step 1 of 3</span>
+        <h2>Your Profile</h2>
+      </div>
+
+      <div class="field-grid">
+        <div class="field">
+          <label>First Name <span class="req">*</span></label>
+          <input type="text" id="firstName" placeholder="Alexandra">
+          <span class="error-msg" id="err-firstName">Required</span>
+        </div>
+        <div class="field">
+          <label>Last Name <span class="req">*</span></label>
+          <input type="text" id="lastName" placeholder="Chen">
+          <span class="error-msg" id="err-lastName">Required</span>
+        </div>
+        <div class="field">
+          <label>Email <span class="req">*</span></label>
+          <input type="email" id="email" placeholder="alex@firm.com">
+          <span class="error-msg" id="err-email">Enter a valid email</span>
+        </div>
+        <div class="field">
+          <label>Phone</label>
+          <input type="tel" id="phone" placeholder="+1 (212) 000-0000">
+        </div>
+        <div class="field full">
+          <label>Firm / Organization</label>
+          <input type="text" id="firm" placeholder="Sequoia Capital, Independent, Family Office...">
+        </div>
+        <div class="field">
+          <label>Investor Type <span class="req">*</span></label>
+          <select id="investorType">
+            <option value="">Select type…</option>
+            <option>Angel Investor</option>
+            <option>Venture Capital</option>
+            <option>Family Office</option>
+            <option>Corporate / Strategic</option>
+            <option>Institutional LP</option>
+            <option>Fund of Funds</option>
+            <option>Other</option>
+          </select>
+          <span class="error-msg" id="err-investorType">Required</span>
+        </div>
+        <div class="field">
+          <label>LinkedIn URL</label>
+          <input type="url" id="linkedin" placeholder="https://linkedin.com/in/...">
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <span></span>
+        <button class="btn btn-primary" onclick="nextStep(1)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- ── Step 2: Investment Parameters ── -->
+    <div class="step-panel" id="step-2">
+      <div class="step-heading">
+        <span class="eyebrow">Step 2 of 3</span>
+        <h2>Investment Parameters</h2>
+      </div>
+
+      <div class="field-grid">
+        <div class="field">
+          <label>Check Size (USD) <span class="req">*</span></label>
+          <select id="checkSize">
+            <option value="">Select range…</option>
+            <option>$10K – $50K</option>
+            <option>$50K – $250K</option>
+            <option>$250K – $500K</option>
+            <option>$500K – $1M</option>
+            <option>$1M – $5M</option>
+            <option>$5M+</option>
+          </select>
+          <span class="error-msg" id="err-checkSize">Required</span>
+        </div>
+        <div class="field">
+          <label>Preferred Stage <span class="req">*</span></label>
+          <select id="stage">
+            <option value="">Select stage…</option>
+            <option>Pre-Seed</option>
+            <option>Seed</option>
+            <option>Series A</option>
+            <option>Series B+</option>
+            <option>Growth / Late Stage</option>
+            <option>Stage Agnostic</option>
+          </select>
+          <span class="error-msg" id="err-stage">Required</span>
+        </div>
+        <div class="field full">
+          <label>Geographic Focus</label>
+          <select id="geography">
+            <option value="">Select region…</option>
+            <option>United States</option>
+            <option>North America</option>
+            <option>Europe</option>
+            <option>Asia-Pacific</option>
+            <option>Latin America</option>
+            <option>Middle East & Africa</option>
+            <option>Global / No Preference</option>
+          </select>
+        </div>
+        <div class="field full">
+          <label>Investments per Year (approx.)</label>
+          <select id="dealFrequency">
+            <option value="">Select…</option>
+            <option>1 – 2</option>
+            <option>3 – 5</option>
+            <option>6 – 10</option>
+            <option>10 – 20</option>
+            <option>20+</option>
+          </select>
+        </div>
+        <div class="field full">
+          <label>Prior Investment Experience</label>
+          <select id="experience">
+            <option value="">Select…</option>
+            <option>First-time investor</option>
+            <option>1 – 5 deals</option>
+            <option>6 – 15 deals</option>
+            <option>16 – 50 deals</option>
+            <option>50+ deals</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="prevStep(2)">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep(2)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- ── Step 3: Sector Focus & Notes ── -->
+    <div class="step-panel" id="step-3">
+      <div class="step-heading">
+        <span class="eyebrow">Step 3 of 3</span>
+        <h2>Focus & Context</h2>
+      </div>
+
+      <div class="field-grid">
+        <div class="field full">
+          <label>Sectors of Interest</label>
+          <div class="checkbox-group" id="sectorGroup">
+            <label class="checkbox-item"><input type="checkbox" value="AI / ML"> <span>AI / ML</span></label>
+            <label class="checkbox-item"><input type="checkbox" value="Fintech"> <span>Fintech</span></label>
+            <label class="checkbox-item"><input type="checkbox" value="Healthtech"> <span>Healthtech</span></label>
+            <label class="checkbox-item"><input type="checkbox" value="Consumer"> <span>Consumer</span></label>
+            <label class="checkbox-item"><input type="checkbox" value="Enterprise SaaS"> <span>Enterprise SaaS</span></label>
+            <label class="checkbox-item"><input type="checkbox" value="Climate / Clean Energy"> <span>Climate / Clean Energy</span></label>
+            <label class="checkbox-item"><input type="checkbox" value="Deep Tech / Hardware"> <span>Deep Tech / Hardware</span></label>
+            <label class="checkbox-item"><input type="checkbox" value="Web3 / Crypto"> <span>Web3 / Crypto</span></label>
+            <label class="checkbox-item"><input type="checkbox" value="EdTech"> <span>EdTech</span></label>
+            <label class="checkbox-item"><input type="checkbox" value="Future of Work"> <span>Future of Work</span></label>
+            <label class="checkbox-item"><input type="checkbox" value="Defense / GovTech"> <span>Defense / GovTech</span></label>
+            <label class="checkbox-item"><input type="checkbox" value="Sector Agnostic"> <span>Sector Agnostic</span></label>
+          </div>
+        </div>
+
+        <div class="field full">
+          <label>How Did You Hear About Us?</label>
+          <select id="referral">
+            <option value="">Select…</option>
+            <option>Existing Trivium Member</option>
+            <option>LinkedIn</option>
+            <option>Event / Conference</option>
+            <option>Warm Introduction</option>
+            <option>Website / Search</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="field full">
+          <label>Anything Else You'd Like Us to Know?</label>
+          <textarea id="notes" placeholder="Co-investment preferences, value-add areas, portfolio companies, specific theses..."></textarea>
+          <span class="hint">Optional — helps us match you with the most relevant opportunities.</span>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="prevStep(3)">← Back</button>
+        <button class="btn btn-primary" id="submitBtn" onclick="submitForm()">Submit Application</button>
+      </div>
+    </div>
+
+    <!-- ── Success ── -->
+    <div class="success-screen" id="successScreen">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+      <h2>Application Received</h2>
+      <p>Thank you for your interest in Trivium Venture Network. A member of our team will review your profile and reach out within 5–7 business days.</p>
+      <div class="success-detail" id="successRef">
+        Submitted · <span id="successTime"></span>
+      </div>
+    </div>
+
+  </div><!-- /form-card -->
+
+  <footer class="footer">
+    <p>© 2026 Trivium Venture Network · <a href="#">Privacy Policy</a> · <a href="#">Terms</a></p>
+  </footer>
+
+</div><!-- /page-wrapper -->
+
+<script>
+// ─────────────────────────────────────────────────────────────────────
+//  CONFIGURATION — replace this with your deployed Apps Script URL
+// ─────────────────────────────────────────────────────────────────────
+const APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
+
+// Hide config banner once real URL is set
+if (APPS_SCRIPT_URL !== 'YOUR_APPS_SCRIPT_URL_HERE') {
+  document.getElementById('configBanner').classList.add('hidden');
+}
+
+// ─── Step navigation ───────────────────────────────────────────────
+function setStep(n) {
+  document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.step-dot').forEach((d, i) => {
+    d.classList.toggle('active', i + 1 === n);
+    d.classList.toggle('completed', i + 1 < n);
+  });
+  document.getElementById('step-' + n).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function nextStep(current) {
+  if (!validateStep(current)) return;
+  setStep(current + 1);
+}
+
+function prevStep(current) {
+  setStep(current - 1);
+}
+
+// ─── Validation ────────────────────────────────────────────────────
+const required = {
+  1: ['firstName', 'lastName', 'email', 'investorType'],
+  2: ['checkSize', 'stage']
+};
+
+const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function validateStep(step) {
+  let ok = true;
+  (required[step] || []).forEach(id => {
+    const el = document.getElementById(id);
+    const err = document.getElementById('err-' + id);
+    const val = el.value.trim();
+    const invalid = !val || (id === 'email' && !emailRe.test(val));
+    el.classList.toggle('error', invalid);
+    if (err) err.classList.toggle('show', invalid);
+    if (invalid) ok = false;
+  });
+  return ok;
+}
+
+// Clear errors on input
+document.querySelectorAll('input, select, textarea').forEach(el => {
+  el.addEventListener('input', () => {
+    el.classList.remove('error');
+    const err = document.getElementById('err-' + el.id);
+    if (err) err.classList.remove('show');
+  });
+});
+
+// ─── Get form data ─────────────────────────────────────────────────
+function getFormData() {
+  const sectors = [...document.querySelectorAll('#sectorGroup input:checked')]
+    .map(cb => cb.value).join(', ');
+
+  return {
+    timestamp:       new Date().toISOString(),
+    firstName:       document.getElementById('firstName').value.trim(),
+    lastName:        document.getElementById('lastName').value.trim(),
+    email:           document.getElementById('email').value.trim(),
+    phone:           document.getElementById('phone').value.trim(),
+    firm:            document.getElementById('firm').value.trim(),
+    investorType:    document.getElementById('investorType').value,
+    linkedin:        document.getElementById('linkedin').value.trim(),
+    checkSize:       document.getElementById('checkSize').value,
+    stage:           document.getElementById('stage').value,
+    geography:       document.getElementById('geography').value,
+    dealFrequency:   document.getElementById('dealFrequency').value,
+    experience:      document.getElementById('experience').value,
+    sectors:         sectors,
+    referral:        document.getElementById('referral').value,
+    notes:           document.getElementById('notes').value.trim(),
+  };
+}
+
+// ─── Submit ────────────────────────────────────────────────────────
+async function submitForm() {
+  const btn = document.getElementById('submitBtn');
+  btn.classList.add('loading');
+  btn.textContent = 'Submitting';
+
+  const data = getFormData();
+
+  if (APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_URL_HERE') {
+    // Demo mode: simulate success
+    console.table(data);
+    await new Promise(r => setTimeout(r, 1200));
+    showSuccess(data);
+    return;
+  }
+
+  try {
+    // Google Apps Script requires no-cors for simple POST
+    await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    showSuccess(data);
+  } catch (err) {
+    btn.classList.remove('loading');
+    btn.textContent = 'Submit Application';
+    alert('Submission error — please try again or email us directly.');
+    console.error(err);
+  }
+}
+
+function showSuccess(data) {
+  document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector('.progress-container').style.display = 'none';
+  document.getElementById('successScreen').classList.add('show');
+  document.getElementById('successTime').textContent =
+    new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+</script>
+
+</body>
+</html>
